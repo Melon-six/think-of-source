@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思源中学 - 创新教育领航者</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #1a7fb8;
+            --secondary: #ffd166;
+            --accent: #06d6a0;
+            --dark: #2b3a42;
+            --light: #f8f9fa;
+            --text: #333;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --gradient: linear-gradient(135deg, var(--primary), #1389c0);
+        }
+        
+        body {
+            background: var(--light);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #app {
+            flex: 1;
+        }
+        
+        .page {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s, transform 0.6s;
+            padding: 20px;
+        }
+        
+        .page.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        
+        .header {
+            background: var(--gradient);
+            color: white;
+            padding: 15px 0;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            transform: rotate(30deg);
+            z-index: 1;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .logo-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: white;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .top-nav {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .top-nav a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+        
+        .top-nav a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        
+        .wave-nav {
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            max-width: 1100px;
+        }
+        
+        .wave-nav::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%231a7fb8' fill-opacity='1' d='M0,160L80,154.7C160,149,320,139,480,149.3C640,160,800,192,960,192C1120,192,1280,160,1360,144L1440,128L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") center top/100% auto no-repeat;
+        }
+        
+        .nav-items {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 30px 20px 20px;
+            gap: 5px;
+        }
+        
+        .nav-item {
+            background: transparent;
+            border: none;
+            color: var(--dark);
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+            transition: var(--transition);
+        }
+        
+        .nav-item.active, .nav-item:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(26, 127, 184, 0.3);
+        }
+        
+        .nav-item.active svg, .nav-item:hover svg {
+            fill: white;
+        }
+      
+        .main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--gradient);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 50px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 0c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43 7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm31 0c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%231389c0' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.1;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .feature-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .about-text {
+            padding-right: 20px;
+        }
+        
+        .about-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .about-text h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .about-image {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            aspect-ratio: 16/9;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .about-image svg {
+            width: 60%;
+            height: 60%;
+            fill: rgba(255, 255, 255, 0.2);
+        }
+        
+    
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+        }
+        
+        .footer-column p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-column a svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--accent);
+        }
+        
+        .footer-column a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-top: 30px;
+        }
+        
+        /*响应式*/
+        @media (max-width: 900px) {
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-text {
+                padding-right: 0;
+            }
+            
+            .nav-items {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 30px 10px 20px;
+                scrollbar-width: none;
+            }
+            
+            .nav-items::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .nav-item {
+                padding: 12px 18px;
+                font-size: 15px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .top-nav {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .feature-card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">思源中学</div>
+                </div>
+                <div class="top-nav">
+                    <a href="#" onclick="showPage('about')">学校简介</a>
+                    <a href="#" onclick="showPage('contact')">联系我们</a>
+                    <a href="#login">登录系统</a>
+                </div>
+            </div>
+        </header>
+        
+     
+        <nav class="wave-nav">
+            <div class="nav-items">
+                <button class="nav-item active" onclick="showPage('home')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    首页
+                </button>
+                <button class="nav-item" onclick="showPage('about')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                    学校概况
+                </button>
+                <button class="nav-item" onclick="showPage('news')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H7v-2h10v2zm0-3H7V9h10v2zm0-3H7V6h10v2z"/>
+                    </svg>
+                    新闻中心
+                </button>
+                <button class="nav-item" onclick="showPage('academics')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/>
+                    </svg>
+                    课程设置
+                </button>
+                <button class="nav-item" onclick="showPage('admissions')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M18 2h-8L4 8v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-6 15l-4-4h3V9.02L13 9v4h3l-4 4z"/>
+                    </svg>
+                    招生信息
+                </button>
+                <button class="nav-item" onclick="showPage('contact')">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm7.46 7.12l-2.78 1.15c-.51-1.36-1.26-2.45-2.22-3.27l1.65-2.67c.91.5 1.72 1.18 2.36 2.01.76.99 1.28 2.14 1.28 3.28 0 .75-.18 1.48-.51 2.15l-1.76-.43zm-14.92 0l-1.76.43c-.33-.67-.51-1.4-.51-2.15 0-1.14.52-2.29 1.28-3.28.64-.83 1.45-1.51 2.36-2.01l1.65 2.67c-.96.82-1.71 1.91-2.22 3.27l-2.78-1.15zM12 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+                    </svg>
+                    联系我们
+                </button>
+            </div>
+        </nav>
+        
+        
+        <main class="main-content">
+            
+            <section id="home" class="page active">
+                <div class="hero">
+                    <h1>思源中学 · 智慧创新教育</h1>
+                    <p>培养德智体美劳全面发展的未来人才，创造适合每一位学生发展的教育环境</p>
+                    <button class="nav-item" onclick="showPage('about')">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                        </svg>
+                        了解更多
+                    </button>
+                </div>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                        </div>
+                        <h3>卓越教师团队</h3>
+                        <p>拥有经验丰富的优秀教师团队，其中特级教师12人，省级骨干教师35人，硕博研究生学历教师占比85%。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M18 2h-8L4 8v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 16h6v-6h-6v6zm8-10.83L14.83 4H13v2.17V6h4v2h-2v2h-2V8h2V6h-2V4h2.83L17 5.17V8h2V5.17z"/>
+                            </svg>
+                        </div>
+                        <h3>先进教学设施</h3>
+                        <p>校园占地200亩，配备现代化教学楼、实验楼、艺术中心、体育馆及智能化图书馆，藏书量达15万册。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M17 3h-1v6h-3V8h-2v8h2v-1h3v3h1c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14h-3v-3h3v3z"/>
+                            </svg>
+                        </div>
+                        <h3>创新课程体系</h3>
+                        <p>开发STEAM特色课程、人工智能课程体系及创客实践项目，培养创新能力与未来竞争力。</p>
+                    </div>
+                </div>
+            </section>
+            
+            
+            <section id="about" class="page">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2>思源中学概况</h2>
+                        <p>思源中学创建于2005年，是一所集初中、高中于一体的现代化学校。学校秉承"思源致远，厚德载物"的校训，致力于培养具有家国情怀、全球视野和创新精神的现代公民。</p>
+                        <p>学校占地200亩，建筑总面积10万平方米，拥有现代化的教学楼、实验楼、艺术中心、体育馆及智能化图书馆。校园环境优美，被评为"国家绿色学校"、"省级园林式校园"。</p>
+                        <p>学校现有教学班86个，学生4300余人，教职工368人。其中特级教师12人，高级教师120人，省级以上骨干教师35人，具有博士、硕士研究生学历的教师占比85%。</p>
+                        <h3 style="margin: 25px 0 15px; color: var(--primary)">办学理念</h3>
+                        <p>学校坚持"以学生发展为本，为终身发展奠基"的办学理念，构建了"全面发展、个性成长"的人才培养模式。通过国家课程、校本课程和特色课程三位一体的课程体系，培养学生的核心素养和创新能力。</p>
+                    </div>
+                    <div class="about-image">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 3h-1v6h-3V8h-2v8h2v-1h3v3h1c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14h-3v-3h3v3z"/>
+                        </svg>
+                    </div>
+                </div>
+            </section>
+            
+            
+            <section id="news" class="page">
+                <h2>新闻中心</h2>
+               
+            </section>
+            
+            <section id="academics" class="page">
+                <h2>课程设置</h2>
+             
+            </section>
+            
+            <section id="admissions" class="page">
+                <h2>招生信息</h2>
+               
+            </section>
+            
+            <section id="contact" class="page">
+                <h2>联系我们</h2>
+                
+            </section>
+        </main>
+        
+        
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <p>思源中学成立于2005年，是一所集初中、高中于一体的现代化学校。以"思源致远，厚德载物"为校训，致力于培养有家国情怀、全球视野和创新精神的现代公民。</p>
+                    <p style="margin-top: 15px;">学校占地面积200亩，现有86个教学班，4300多名学生，368名教职员工。</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="#" onclick="showPage('home')"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> 首页</a></li>
+                        <li><a href="#" onclick="showPage('about')"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg> 学校简介</a></li>
+                        <li><a href="#" onclick="showPage('news')"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-3 12H7v-2h10v2zm0-3H7V9h10v2zm0-3H7V6h10v2z"/></svg> 新闻动态</a></li>
+                        <li><a href="#" onclick="showPage('admissions')"><svg viewBox="0 0 24 24"><path d="M18 2h-8L4 8v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-6 15l-4-4h3V9.02L13 9v4h3l-4 4z"/></svg> 招生简章</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <p><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--accent);margin-right:10px;vertical-align:middle;"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg> 邮箱: contact@siyuan.edu.cn</p>
+                    <p><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--accent);margin-right:10px;vertical-align:middle;"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg> 招生热线: 0510-88886666</p>
+                    <p><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--accent);margin-right:10px;vertical-align:middle;"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg> 地址: 南京市江宁区教育路88号</p>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2023 思源中学 版权所有 | 苏ICP备05020215号 | 技术支持: 思源信息中心
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        
+        function showPage(pageId) {
+            
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            
+            document.getElementById(pageId).classList.add('active');
+            
+            
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const navItems = document.querySelectorAll('.nav-item');
+            switch(pageId) {
+                case 'home': navItems[0].classList.add('active'); break;
+                case 'about': navItems[1].classList.add('active'); break;
+                case 'news': navItems[2].classList.add('active'); break;
+                case 'academics': navItems[3].classList.add('active'); break;
+                case 'admissions': navItems[4].classList.add('active'); break;
+                case 'contact': navItems[5].classList.add('active'); break;
+            }
+            
+            // 滚动
+            window.scrollTo(0, 0);
+        }
+        
+        
+        function initPageContent() {
+            
+            const newsPage = document.getElementById('news');
+            newsPage.innerHTML += `
+                <div class="news-container">
+                    <div class="feature-card">
+                        <h3 style="color: var(--primary); margin-bottom: 15px;">校园要闻</h3>
+                        <ul style="list-style: none;">
+                            <li style="padding: 12px 0; border-bottom: 1px dashed #eee;">
+                                <a href="#" style="text-decoration: none; color: var(--dark); font-weight: 500;">
+                                    第五届科技创新大赛圆满落幕
+                                </a>
+                                <p style="color: #777; font-size: 14px; margin-top: 5px;">2023-10-15</p>
+                            </li>
+                            <li style="padding: 12px 0; border-bottom: 1px dashed #eee;">
+                                <a href="#" style="text-decoration: none; color: var(--dark); font-weight: 500;">
+                                    思源学子在全国数学竞赛中斩获佳绩
+                                </a>
+                                <p style="color: #777; font-size: 14px; margin-top: 5px;">2023-10-08</p>
+                            </li>
+                            <li style="padding: 12px 0; border-bottom: 1px dashed #eee;">
+                                <a href="#" style="text-decoration: none; color: var(--dark); font-weight: 500;">
+                                    德国友好学校代表团来访交流
+                                </a>
+                                <p style="color: #777; font-size: 14px; margin-top: 5px;">2023-09-28</p>
+                            </li>
+                            <li style="padding: 12px 0; border-bottom: 1px dashed #eee;">
+                                <a href="#" style="text-decoration: none; color: var(--dark); font-weight: 500;">
+                                    校园艺术节开幕晚会精彩纷呈
+                                </a>
+                                <p style="color: #777; font-size: 14px; margin-top: 5px;">2023-09-15</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            // 课程
+            const academicsPage = document.getElementById('academics');
+            academicsPage.innerHTML += `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px;">
+                    <div class="feature-card">
+                        <h3 style="color: var(--primary);">国家基础课程</h3>
+                        <ul style="list-style: none; margin-top: 15px;">
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>语文</span>
+                                <span style="color: var(--accent);">必修</span>
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>数学</span>
+                                <span style="color: var(--accent);">必修</span>
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>英语</span>
+                                <span style="color: var(--accent);">必修</span>
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>物理</span>
+                                <span style="color: var(--accent);">必修</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3 style="color: var(--primary);">STEAM特色课程</h3>
+                        <ul style="list-style: none; margin-top: 15px;">
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>机器人编程</span>
+                                <span style="color: var(--secondary);">选修</span>
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>3D设计与打印</span>
+                                <span style="color: var(--secondary);">选修</span>
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>人工智能入门</span>
+                                <span style="color: var(--secondary);">选修</span>
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>工程思维训练</span>
+                                <span style="color: var(--secondary);">选修</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3 style="color: var(--primary);">艺体素养课程</h3>
+                        <ul style="list-style: none; margin-top: 15px;">
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>管弦乐团</span>
+                                <span style="color: var(--accent);">社团</span>
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>油画创作</span>
+                                <span style="color: var(--accent);">社团</span>
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>网球训练</span>
+                                <span style="color: var(--accent);">社团</span>
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between;">
+                                <span>戏剧表演</span>
+                                <span style="color: var(--accent);">社团</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+
+        }
+        
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initPageContent();
+        });
+    </script>
+</body>
+</html>
